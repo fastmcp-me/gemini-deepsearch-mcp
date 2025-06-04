@@ -1,28 +1,30 @@
 import os
 
+from agent.tools_and_schemas import SearchQueryList, Reflection
 from dotenv import load_dotenv
-from google.genai import Client, types
 from langchain_core.messages import AIMessage
-from langchain_core.runnables import RunnableConfig
-from langchain_google_genai import ChatGoogleGenerativeAI
-from langgraph.graph import END, START, StateGraph
 from langgraph.types import Send
+from langgraph.graph import StateGraph
+from langgraph.graph import START, END
+from langchain_core.runnables import RunnableConfig
+from google.genai import Client, types
 
-from agent.configuration import Configuration
-from agent.prompts import (
-    answer_instructions,
-    get_current_date,
-    query_writer_instructions,
-    reflection_instructions,
-    web_searcher_instructions,
-)
 from agent.state import (
     OverallState,
     QueryGenerationState,
     ReflectionState,
     WebSearchState,
 )
-from agent.tools_and_schemas import Reflection, SearchQueryList
+from agent.configuration import Configuration
+from agent.prompts import (
+    get_current_date,
+    query_writer_instructions,
+    web_searcher_instructions,
+    reflection_instructions,
+    answer_instructions,
+)
+from langchain_google_genai import ChatGoogleGenerativeAI
+from google.ai.generativelanguage_v1beta.types import Tool as GenAITool
 from agent.utils import (
     get_citations,
     get_research_topic,
@@ -112,31 +114,29 @@ def web_research(state: WebSearchState, config: RunnableConfig) -> OverallState:
         research_topic=state["search_query"],
     )
 
-    tools = [
-        types.Tool(google_search=types.GoogleSearch()),
-    ]
-    generate_content_config = types.GenerateContentConfig(
+    llm = ChatGoogleGenerativeAI(
+        model=configurable.query_generator_model,
         temperature=0,
-        thinking_config=types.ThinkingConfig(
-            thinking_budget=0,
-            include_thoughts=False,
-        ),
-        tools=tools,
+        max_retries=2,
+        include_thoughts=False,
+        thinking_budget=0,
+        api_key=os.getenv("GEMINI_API_KEY"),
     )
 
-    # Uses the google genai client as the langchain client doesn't return grounding metadata
-    response = genai_client.models.generate_content(
-        model=configurable.query_generator_model,
-        contents=formatted_prompt,
-        config=generate_content_config,
+    response = llm.invoke(
+        formatted_prompt,
+        tools=[GenAITool(google_search={})],
     )
+
     # resolve the urls to short urls for saving tokens and time
     resolved_urls = resolve_urls(
-        response.candidates[0].grounding_metadata.grounding_chunks, state["id"]
+        response.response_metadata["grounding_metadata"]["grounding_chunks"],
+        state["id"],
     )
+
     # Gets the citations and adds them to the generated text
     citations = get_citations(response, resolved_urls)
-    modified_text = insert_citation_markers(response.text, citations)
+    modified_text = insert_citation_markers(response.content, citations)
     sources_gathered = [item for citation in citations for item in citation["segments"]]
 
     return {
