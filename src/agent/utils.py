@@ -1,11 +1,10 @@
 from typing import Any, Dict, List
-from langchain_core.messages import AnyMessage, AIMessage, HumanMessage
+
+from langchain_core.messages import AIMessage, AnyMessage, HumanMessage
 
 
 def get_research_topic(messages: List[AnyMessage]) -> str:
-    """
-    Get the research topic from the messages.
-    """
+    """Get the research topic from the messages."""
     # check if request has a history and combine the messages into a single string
     if len(messages) == 1:
         research_topic = messages[-1].content
@@ -20,8 +19,7 @@ def get_research_topic(messages: List[AnyMessage]) -> str:
 
 
 def resolve_urls(urls_to_resolve: List[Any], id: int) -> Dict[str, str]:
-    """
-    Create a map of the vertex ai search urls (very long) to a short url with a unique id for each url.
+    """Create a map of the vertex ai search urls (very long) to a short url with a unique id for each url.
     Ensures each original URL gets a consistent shortened form while maintaining uniqueness.
     """
     prefix = f"https://vertexaisearch.cloud.google.com/id/"
@@ -37,8 +35,7 @@ def resolve_urls(urls_to_resolve: List[Any], id: int) -> Dict[str, str]:
 
 
 def insert_citation_markers(text, citations_list):
-    """
-    Inserts citation markers into a text string based on start and end indices.
+    """Inserts citation markers into a text string based on start and end indices.
 
     Args:
         text (str): The original text string.
