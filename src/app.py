@@ -1,37 +1,47 @@
 """ASGI application setup for DeepSearch using FastMCP."""
 
+from typing import Annotated, Literal
+
+from fastapi import FastAPI
 from fastmcp import FastMCP
 from langchain_core.messages import HumanMessage
+from pydantic import Field
+from starlette.routing import Mount
 
 from agent.graph import graph
 
 mcp = FastMCP("DeepSearch")
 
-# Create the ASGI app
-app = mcp.http_app(path="/mcp")
-
 @mcp.tool()
 def deep_search(
-    query: str,
-    initial_search_query_count: int = 3,
-    max_research_loops: int = 2,
-    query_generator_model: str = "gemini-2.5-flash-preview-05-20",
-    reflection_model: str = "gemini-2.5-flash-preview-05-20",
-    answer_model: str = "gemini-2.5-pro-preview-05-06"
+    query: Annotated[str, Field(description="Search query string")],
+    effort: Annotated[
+        Literal["low", "medium", "high"], Field(description="Search effort")
+    ] = "low",
 ) -> dict:
     """Perform a deep search on a given query using an advanced web research agent.
     
     Args:
         query: The research question or topic to investigate.
-        initial_search_query_count: Number of initial search queries to generate (default: 3).
-        max_research_loops: Maximum number of research loops to perform (default: 2).
-        query_generator_model: Model for generating search queries (default: gemini-2.5-flash-preview-05-20).
-        reflection_model: Model for reflection on search results (default: gemini-2.5-flash-preview-05-20).
-        answer_model: Model for generating the final answer (default: gemini-2.5-pro-preview-05-06).
+        effort: The amount of effect for the research, low, medium or hight (default: low).
     
     Returns:
         A dictionary containing the answer to the query and a list of sources used.
     """
+    # Set search query count, research loops and reasoning model based on effort level
+    if effort == "low":
+        initial_search_query_count = 1
+        max_research_loops = 1
+        reasoning_model = "gemini-2.5-flash-preview-05-20"
+    elif effort == "medium":
+        initial_search_query_count = 3
+        max_research_loops = 2
+        reasoning_model = "gemini-2.5-flash-preview-05-20"
+    else:  # high effort
+        initial_search_query_count = 5
+        max_research_loops = 3
+        reasoning_model = "gemini-2.5-pro-preview-05-06"
+    
     # Prepare the input state with the user's query
     input_state = {
         "messages": [HumanMessage(content=query)],
@@ -40,8 +50,12 @@ def deep_search(
         "sources_gathered": [],
         "initial_search_query_count": initial_search_query_count,
         "max_research_loops": max_research_loops,
-        "reasoning_model": answer_model
+        "reasoning_model": reasoning_model,
     }
+
+    query_generator_model: str = "gemini-2.5-flash-preview-05-20"
+    reflection_model: str = "gemini-2.5-flash-preview-05-20"
+    answer_model: str = "gemini-2.5-pro-preview-05-06"
     
     # Configuration for the agent
     config = {
@@ -63,3 +77,10 @@ def deep_search(
         "answer": answer,
         "sources": sources
     }
+
+# Create the ASGI app
+mcp_app = mcp.http_app(path="/mcp")
+
+# Create a FastAPI app and mount the MCP server
+app = FastAPI(lifespan=mcp_app.lifespan)
+app.mount("/mcp-server", mcp_app)
