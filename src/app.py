@@ -1,5 +1,3 @@
-"""ASGI application setup for DeepSearch using FastMCP."""
-
 import asyncio
 from typing import Annotated, Literal
 
