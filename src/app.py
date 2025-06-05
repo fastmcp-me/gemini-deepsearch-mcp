@@ -1,5 +1,6 @@
 """ASGI application setup for DeepSearch using FastMCP."""
 
+import asyncio
 from typing import Annotated, Literal
 
 from fastapi import FastAPI
@@ -13,7 +14,7 @@ from agent.graph import graph
 mcp = FastMCP("DeepSearch")
 
 @mcp.tool()
-def deep_search(
+async def deep_search(
     query: Annotated[str, Field(description="Search query string")],
     effort: Annotated[
         Literal["low", "medium", "high"], Field(description="Search effort")
@@ -66,8 +67,8 @@ def deep_search(
         }
     }
     
-    # Run the agent graph to process the query
-    result = graph.invoke(input_state, config)
+    # Run the agent graph to process the query in a separate thread to avoid blocking
+    result = await asyncio.to_thread(graph.invoke, input_state, config)
     
     # Extract the final answer and sources from the result
     answer = result["messages"][-1].content if result["messages"] else "No answer generated."
