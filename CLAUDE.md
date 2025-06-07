@@ -55,5 +55,5 @@ This is a LangGraph-based web research agent that uses Google Gemini models and 
 - `src/agent/configuration.py`: Agent configuration schema
 - `src/agent/prompts.py`: Prompt templates for different workflow stages
 - `src/agent/tools_and_schemas.py`: Pydantic schemas for structured outputs
-- `tests/test_main.py`: Unit tests for stdio MCP server
+- `tests/test_simple_mcp.py`: tests for stdio MCP server
 - `tests/test_stdio_client.py`: Integration test client for MCP stdio protocol

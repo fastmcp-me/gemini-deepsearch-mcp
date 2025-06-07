@@ -78,6 +78,6 @@ test_mcp:
 	@echo "Testing MCP stdio server..."
 	@uv run python tests/test_simple_mcp.py
 
-test_mcp_full:
-	@echo "Testing MCP server validation..."
-	@uv run python tests/test_mcp_validation.py
+inspect:
+	@echo "Inspecting local MCP server..."
+	@npx @modelcontextprotocol/inspector uv --directory `pwd` run python main.py
