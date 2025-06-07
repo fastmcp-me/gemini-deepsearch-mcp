@@ -7,7 +7,7 @@ from langchain_core.messages import HumanMessage
 from pydantic import Field
 from starlette.routing import Mount
 
-from agent.graph import graph
+from .agent.graph import graph
 
 mcp = FastMCP("DeepSearch")
 

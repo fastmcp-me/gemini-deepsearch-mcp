@@ -6,7 +6,7 @@ from fastmcp import FastMCP
 from langchain_core.messages import HumanMessage
 from pydantic import Field
 
-from src.agent.graph import graph
+from .agent.graph import graph
 
 # Create MCP server
 mcp = FastMCP("DeepSearch")

@@ -6,7 +6,7 @@ import pytest
 from fastapi.testclient import TestClient
 from langchain_core.messages import AIMessage, HumanMessage
 
-from src.app import app, deep_search
+from gemini_deepsearch_mcp.app import app, deep_search
 
 pytestmark = pytest.mark.anyio
 

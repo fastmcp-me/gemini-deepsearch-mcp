@@ -61,7 +61,7 @@ dev = [
 ]
 
 [project.scripts]
-gemini-deepsearch-mcp = "main:main"
+gemini-deepsearch-mcp = "gemini_deepsearch_mcp.main:main"
 
 [project.urls]
 Homepage = "https://github.com/alexcong/gemini-deepsearch-mcp"

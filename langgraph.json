@@ -4,7 +4,7 @@
     "agent": "./src/agent/graph.py:graph"
   },
   "http": {
-    "app": "./src/app.py:app"
+    "app": "./src/gemini_deepsearch_mcp/app.py:app"
   },
   "env": ".env"
 }
