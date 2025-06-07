@@ -4,16 +4,16 @@
 all: help
 
 # Define a variable for the test file path.
-TEST_FILE ?= tests/unit_tests/
+TEST_FILE ?= tests/
 
 test:
-	uv run --with-editable . pytest $(TEST_FILE)
+	uv run --with-editable . pytest $(TEST_FILE) -k "not trio"
 
 test_watch:
-	uv run --with-editable . ptw --snapshot-update --now . -- -vv tests/unit_tests
+	uv run --with-editable . ptw --snapshot-update --now . -- -vv tests/
 
 test_profile:
-	uv run --with-editable . pytest -vv tests/unit_tests/ --profile-svg
+	uv run --with-editable . pytest -vv tests/ --profile-svg
 
 extended_tests:
 	uv run --with-editable . pytest --only-extended $(TEST_FILE)

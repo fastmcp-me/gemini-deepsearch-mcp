@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **Start development server**: `make dev` (uses LangGraph dev server with HTTP and Studio UI)
 - **Start stdio MCP server**: `make local` (starts LangGraph server + stdio MCP server)
-- **Run tests**: `make test` or `uv run --with-editable . pytest tests/unit_tests/`
+- **Run tests**: `make test` (runs pytest on tests/ directory, excludes trio backend)
 - **Run specific test file**: `make test TEST_FILE=path/to/test`
 - **Test MCP stdio server**: `make test_mcp` (tests stdio MCP functionality)
 - **Watch tests**: `make test_watch`
@@ -20,10 +20,11 @@ This is a LangGraph-based web research agent that uses Google Gemini models and 
 
 ### Core Components
 
-- **LangGraph Agent** (`src/agent/graph.py`): State-driven research workflow with nodes for query generation, web research, reflection, and answer synthesis
-- **FastMCP HTTP Server** (`src/app.py`): HTTP API that exposes the `deep_search` tool with configurable effort levels
-- **FastMCP stdio Server** (`main.py`): stdio transport MCP server that starts LangGraph server and provides MCP integration
-- **State Management** (`src/agent/state.py`): TypedDict-based states for different workflow stages
+- **LangGraph Agent** (`src/gemini_deepsearch_mcp/agent/graph.py`): State-driven research workflow with nodes for query generation, web research, reflection, and answer synthesis
+- **FastMCP HTTP Server** (`src/gemini_deepsearch_mcp/app.py`): HTTP API that exposes the `deep_search` tool with configurable effort levels
+- **FastMCP stdio Server** (`src/gemini_deepsearch_mcp/main.py`): Core stdio MCP server implementation with deep_search tool
+- **Root stdio Entry Point** (`main.py`): Wrapper script that imports and runs the stdio MCP server from the main package
+- **State Management** (`src/gemini_deepsearch_mcp/agent/state.py`): TypedDict-based states for different workflow stages
 
 ### Research Flow
 
@@ -49,11 +50,46 @@ This is a LangGraph-based web research agent that uses Google Gemini models and 
 
 ### Key Files
 
-- `src/agent/graph.py`: Main LangGraph workflow definition
-- `src/app.py`: FastMCP HTTP server with deep_search tool
-- `main.py`: FastMCP stdio server with LangGraph server startup and signal handling
-- `src/agent/configuration.py`: Agent configuration schema
-- `src/agent/prompts.py`: Prompt templates for different workflow stages
-- `src/agent/tools_and_schemas.py`: Pydantic schemas for structured outputs
-- `tests/test_simple_mcp.py`: tests for stdio MCP server
+- `src/gemini_deepsearch_mcp/agent/graph.py`: Main LangGraph workflow definition
+- `src/gemini_deepsearch_mcp/app.py`: FastMCP HTTP server with deep_search tool  
+- `src/gemini_deepsearch_mcp/main.py`: Core stdio MCP server implementation
+- `main.py`: Root entry point wrapper for stdio MCP server (imports from src/gemini_deepsearch_mcp/main.py)
+- `src/gemini_deepsearch_mcp/agent/configuration.py`: Agent configuration schema
+- `src/gemini_deepsearch_mcp/agent/prompts.py`: Prompt templates for different workflow stages
+- `src/gemini_deepsearch_mcp/agent/tools_and_schemas.py`: Pydantic schemas for structured outputs
+- `tests/test_app.py`: Unit tests for FastMCP HTTP server and deep_search tool
+- `tests/test_simple_mcp.py`: Basic tests for stdio MCP server import and startup
 - `tests/test_stdio_client.py`: Integration test client for MCP stdio protocol
+
+### Testing
+
+The test suite includes comprehensive coverage of the MCP server functionality:
+
+- **Unit Tests** (`tests/test_app.py`): Test deep_search tool with different effort levels, error handling, and FastAPI integration
+- **Integration Tests** (`tests/test_simple_mcp.py`, `tests/test_stdio_client.py`): Test MCP stdio server startup, protocol compliance, and basic functionality
+- **Test Configuration**: Tests use asyncio backend only (trio excluded due to missing dependencies)
+- **Mock Support**: Tests use proper mocking for graph.invoke calls to avoid requiring GEMINI_API_KEY during testing
+
+### Project Structure
+
+```
+├── main.py                                    # Root stdio MCP server entry point
+├── src/gemini_deepsearch_mcp/                # Main package
+│   ├── __init__.py
+│   ├── main.py                               # Core stdio MCP server implementation
+│   ├── app.py                                # FastMCP HTTP server
+│   └── agent/                                # LangGraph agent components
+│       ├── __init__.py
+│       ├── graph.py                          # Main workflow definition
+│       ├── configuration.py                 # Configuration schema
+│       ├── prompts.py                        # Prompt templates
+│       ├── state.py                          # State management
+│       ├── tools_and_schemas.py              # Pydantic schemas
+│       └── utils.py                          # Utility functions
+├── tests/                                    # Test suite
+│   ├── test_app.py                           # HTTP server tests
+│   ├── test_simple_mcp.py                    # Basic MCP tests
+│   └── test_stdio_client.py                 # Integration tests
+├── langgraph.json                            # LangGraph configuration
+└── pyproject.toml                            # Project configuration
+```

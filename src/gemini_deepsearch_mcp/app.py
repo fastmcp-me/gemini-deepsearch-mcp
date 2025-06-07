@@ -11,6 +11,7 @@ from .agent.graph import graph
 
 mcp = FastMCP("DeepSearch")
 
+
 @mcp.tool()
 async def deep_search(
     query: Annotated[str, Field(description="Search query string")],
@@ -19,11 +20,11 @@ async def deep_search(
     ] = "low",
 ) -> dict:
     """Perform a deep search on a given query using an advanced web research agent.
-    
+
     Args:
         query: The research question or topic to investigate.
         effort: The amount of effect for the research, low, medium or hight (default: low).
-    
+
     Returns:
         A dictionary containing the answer to the query and a list of sources used.
     """
@@ -40,7 +41,7 @@ async def deep_search(
         initial_search_query_count = 5
         max_research_loops = 3
         reasoning_model = "gemini-2.5-pro-preview-05-06"
-    
+
     # Prepare the input state with the user's query
     input_state = {
         "messages": [HumanMessage(content=query)],
@@ -55,27 +56,27 @@ async def deep_search(
     query_generator_model: str = "gemini-2.5-flash-preview-05-20"
     reflection_model: str = "gemini-2.5-flash-preview-05-20"
     answer_model: str = "gemini-2.5-pro-preview-05-06"
-    
+
     # Configuration for the agent
     config = {
         "configurable": {
             "query_generator_model": query_generator_model,
             "reflection_model": reflection_model,
-            "answer_model": answer_model
+            "answer_model": answer_model,
         }
     }
-    
+
     # Run the agent graph to process the query in a separate thread to avoid blocking
     result = await asyncio.to_thread(graph.invoke, input_state, config)
-    
+
     # Extract the final answer and sources from the result
-    answer = result["messages"][-1].content if result["messages"] else "No answer generated."
+    answer = (
+        result["messages"][-1].content if result["messages"] else "No answer generated."
+    )
     sources = result["sources_gathered"]
-    
-    return {
-        "answer": answer,
-        "sources": sources
-    }
+
+    return {"answer": answer, "sources": sources}
+
 
 # Create the ASGI app
 mcp_app = mcp.http_app(path="/mcp")

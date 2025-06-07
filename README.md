@@ -53,6 +53,14 @@ Returns:
 - Python 3.12+
 - `GEMINI_API_KEY` environment variable
 
+## Installation
+
+Install directly using uvx:
+
+```bash
+uvx install gemini-deepsearch-mcp
+```
+
 ## Claude Desktop Integration
 
 To use the MCP server with Claude Desktop, add this configuration to your Claude Desktop config file:
@@ -64,9 +72,8 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json`:
 {
   "mcpServers": {
     "gemini-deepsearch": {
-      "command": "uv",
-      "args": ["run", "python", "main.py"],
-      "cwd": "/path/to/gemini-deepsearch-mcp",
+      "command": "uvx",
+      "args": ["gemini-deepsearch-mcp"],
       "env": {
         "GEMINI_API_KEY": "your-gemini-api-key-here"
       }
@@ -82,9 +89,8 @@ Edit `%APPDATA%/Claude/claude_desktop_config.json`:
 {
   "mcpServers": {
     "gemini-deepsearch": {
-      "command": "uv",
-      "args": ["run", "python", "main.py"],
-      "cwd": "C:\\path\\to\\gemini-deepsearch-mcp",
+      "command": "uvx",
+      "args": ["gemini-deepsearch-mcp"],
       "env": {
         "GEMINI_API_KEY": "your-gemini-api-key-here"
       }
@@ -95,6 +101,28 @@ Edit `%APPDATA%/Claude/claude_desktop_config.json`:
 
 ### Linux
 Edit `~/.config/claude/claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "gemini-deepsearch": {
+      "command": "uvx",
+      "args": ["gemini-deepsearch-mcp"],
+      "env": {
+        "GEMINI_API_KEY": "your-gemini-api-key-here"
+      }
+    }
+  }
+}
+```
+
+**Important:** 
+- Replace `your-gemini-api-key-here` with your actual Gemini API key
+- Restart Claude Desktop after updating the configuration
+
+### Alternative: Local Development Setup
+
+For development or if you prefer to run from source:
 
 ```json
 {
@@ -111,10 +139,7 @@ Edit `~/.config/claude/claude_desktop_config.json`:
 }
 ```
 
-**Important:** 
-- Replace `/path/to/gemini-deepsearch-mcp` with the actual absolute path to your project directory
-- Replace `your-gemini-api-key-here` with your actual Gemini API key
-- Restart Claude Desktop after updating the configuration
+Replace `/path/to/gemini-deepsearch-mcp` with the actual absolute path to your project directory.
 
 Once configured, you can use the `deep_search` tool in Claude Desktop by asking questions like:
 - "Use deep_search to research the latest developments in quantum computing"
