@@ -77,7 +77,11 @@ def deep_search(
         "sources": sources
     }
 
-
-if __name__ == "__main__":
+def main():
+    """Main entry point for the MCP server."""
     sys.stderr.write("Starting MCP stdio server...\n")
     mcp.run(transport="stdio")
+
+
+if __name__ == "__main__":
+    main()
