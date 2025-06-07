@@ -3,11 +3,8 @@ import sys
 from typing import Annotated, Literal
 
 from fastmcp import FastMCP
-from langchain.globals import set_verbose
 from langchain_core.messages import HumanMessage
 from pydantic import Field
-
-set_verbose(True)
 
 from src.agent.graph import graph
 
