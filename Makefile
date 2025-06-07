@@ -61,7 +61,23 @@ help:
 	@echo 'tests                        - run unit tests'
 	@echo 'test TEST_FILE=<test_file>   - run all tests in file'
 	@echo 'test_watch                   - run unit tests in watch mode'
+	@echo 'test_mcp                     - test MCP stdio server (simple)'
+	@echo 'test_mcp_full                - test full MCP stdio protocol'
+	@echo 'dev                          - start LangGraph development server'
+	@echo 'local                        - start MCP stdio server'
 
 dev:
 	@echo "Starting development server..."
 	@uv run langgraph dev
+
+local:
+	@echo "Starting local MCP server..."
+	@uv run python main.py
+
+test_mcp:
+	@echo "Testing MCP stdio server..."
+	@uv run python tests/test_simple_mcp.py
+
+test_mcp_full:
+	@echo "Testing MCP server validation..."
+	@uv run python tests/test_mcp_validation.py
