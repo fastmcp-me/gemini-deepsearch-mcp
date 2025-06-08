@@ -35,6 +35,17 @@ Test the MCP stdio server:
 make test_mcp
 ```
 
+Use MCP inspector
+```bash
+make inspect
+```
+
+With Langsmith tracing
+```bash
+GEMINI_API_KEY=AI******* LANGSMITH_API_KEY=ls******* LANGSMITH_TRACING=true make inspect
+```
+
+
 ## API
 
 The `deep_search` tool accepts:
