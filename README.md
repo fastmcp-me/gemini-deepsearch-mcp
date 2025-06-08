@@ -45,7 +45,6 @@ With Langsmith tracing
 GEMINI_API_KEY=AI******* LANGSMITH_API_KEY=ls******* LANGSMITH_TRACING=true make inspect
 ```
 
-
 ## API
 
 The `deep_search` tool accepts:
@@ -87,7 +86,8 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json`:
       "args": ["gemini-deepsearch-mcp"],
       "env": {
         "GEMINI_API_KEY": "your-gemini-api-key-here"
-      }
+      },
+      "timeout": 180000
     }
   }
 }
@@ -104,7 +104,8 @@ Edit `%APPDATA%/Claude/claude_desktop_config.json`:
       "args": ["gemini-deepsearch-mcp"],
       "env": {
         "GEMINI_API_KEY": "your-gemini-api-key-here"
-      }
+      },
+      "timeout": 180000
     }
   }
 }
@@ -121,7 +122,8 @@ Edit `~/.config/claude/claude_desktop_config.json`:
       "args": ["gemini-deepsearch-mcp"],
       "env": {
         "GEMINI_API_KEY": "your-gemini-api-key-here"
-      }
+      },
+      "timeout": 180000
     }
   }
 }
@@ -130,6 +132,7 @@ Edit `~/.config/claude/claude_desktop_config.json`:
 **Important:** 
 - Replace `your-gemini-api-key-here` with your actual Gemini API key
 - Restart Claude Desktop after updating the configuration
+- Set ample timeout to avoid `MCP error -32001: Request timed out`
 
 ### Alternative: Local Development Setup
 
