@@ -40,7 +40,7 @@ async def deep_search(
     else:  # high effort
         initial_search_query_count = 5
         max_research_loops = 3
-        reasoning_model = "gemini-2.5-pro-preview-05-06"
+        reasoning_model = "gemini-2.5-pro-preview-06-05"
 
     # Prepare the input state with the user's query
     input_state = {
@@ -55,7 +55,7 @@ async def deep_search(
 
     query_generator_model: str = "gemini-2.5-flash-preview-05-20"
     reflection_model: str = "gemini-2.5-flash-preview-05-20"
-    answer_model: str = "gemini-2.5-pro-preview-05-06"
+    answer_model: str = "gemini-2.5-pro-preview-06-05"
 
     # Configuration for the agent
     config = {
