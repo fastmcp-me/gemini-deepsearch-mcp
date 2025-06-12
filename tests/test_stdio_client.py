@@ -180,8 +180,10 @@ async def test_basic_functionality():
 
             result = await deep_search("What is AI?", "low")
             print(f"Direct function test result: {result}")
-            assert "answer" in result
-            assert "sources" in result
+            import tempfile
+            assert "file_path" in result
+            assert result["file_path"].startswith(tempfile.gettempdir())
+            assert result["file_path"].endswith(".json")
             print("✓ Direct function test passed")
 
     except Exception as e:

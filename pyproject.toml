@@ -1,6 +1,6 @@
 [project]
 name = "gemini-deepsearch-mcp"
-version = "0.1.2"
+version = "0.1.3"
 description = "Gemini DeepSearch MCP - Automated research agent with Google Gemini models"
 readme = "README.md"
 license = { text = "MIT" }

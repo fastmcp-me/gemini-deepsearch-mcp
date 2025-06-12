@@ -120,7 +120,7 @@ class TestDeepSearchTool:
             # Verify high effort configuration
             assert input_state["initial_search_query_count"] == 5
             assert input_state["max_research_loops"] == 3
-            assert input_state["reasoning_model"] == "gemini-2.5-pro-preview-05-06"
+            assert input_state["reasoning_model"] == "gemini-2.5-pro-preview-06-05"
 
     async def test_deep_search_default_effort(self, mock_graph_result):
         """Test deep_search with default effort level (should be low)."""
@@ -179,7 +179,7 @@ class TestDeepSearchTool:
                 "configurable": {
                     "query_generator_model": "gemini-2.5-flash-preview-05-20",
                     "reflection_model": "gemini-2.5-flash-preview-05-20",
-                    "answer_model": "gemini-2.5-pro-preview-05-06",
+                    "answer_model": "gemini-2.5-pro-preview-06-05",
                 }
             }
             assert config == expected_config
@@ -274,4 +274,4 @@ class TestErrorHandling:
             # Should default to high effort configuration
             assert input_state["initial_search_query_count"] == 5
             assert input_state["max_research_loops"] == 3
-            assert input_state["reasoning_model"] == "gemini-2.5-pro-preview-05-06"
+            assert input_state["reasoning_model"] == "gemini-2.5-pro-preview-06-05"

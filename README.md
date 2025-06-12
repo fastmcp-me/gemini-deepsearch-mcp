@@ -54,9 +54,16 @@ The `deep_search` tool accepts:
   - **Medium**: 3 queries, 2 loops, Flash model  
   - **High**: 5 queries, 3 loops, Pro model
 
-Returns:
+### Return Format
+
+**HTTP MCP Server** (Development mode):
 - **answer**: Comprehensive research response with citations
 - **sources**: List of source URLs used in research
+
+**Stdio MCP Server** (Claude Desktop integration):
+- **file_path**: Path to a JSON file containing the research results
+
+The stdio MCP server writes results to a JSON file in the system temp directory to optimize token usage. The JSON file contains the same `answer` and `sources` data as the HTTP version, but is accessed via file path rather than returned directly.
 
 ## Requirements
 

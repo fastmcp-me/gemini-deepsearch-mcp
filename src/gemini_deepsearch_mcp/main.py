@@ -1,6 +1,10 @@
 """Main entry point for the stdio MCP server."""
 
+import json
+import os
+import re
 import sys
+import tempfile
 from typing import Annotated, Literal
 
 from fastmcp import FastMCP
@@ -27,7 +31,7 @@ def deep_search(
         effort: The amount of effect for the research, low, medium or hight (default: low).
 
     Returns:
-        A dictionary containing the answer to the query and a list of sources used.
+        A dictionary containing the file path to a JSON file with the answer and sources.
     """
     # Set search query count, research loops and reasoning model based on effort level
     if effort == "low":
@@ -76,7 +80,17 @@ def deep_search(
     )
     sources = result["sources_gathered"]
 
-    return {"answer": answer, "sources": sources}
+    # Create filename from first few characters of query (spaces replaced with underscores)
+    sanitized_query = re.sub(r'[^\w\s-]', '', query)[:20]  # Remove special chars, keep first 20 chars
+    filename = re.sub(r'\s+', '_', sanitized_query.strip()) + '.json'
+    file_path = os.path.join(tempfile.gettempdir(), filename)
+    
+    # Write answer and sources to JSON file
+    result_data = {"answer": answer, "sources": sources}
+    with open(file_path, 'w', encoding='utf-8') as f:
+        json.dump(result_data, f, ensure_ascii=False, indent=2)
+    
+    return {"file_path": file_path}
 
 
 def main():
