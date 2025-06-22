@@ -1,11 +1,13 @@
 from __future__ import annotations
 
-import operator
 from dataclasses import dataclass, field
 from typing import TypedDict
 
 from langgraph.graph import add_messages
 from typing_extensions import Annotated
+
+
+import operator
 
 
 class OverallState(TypedDict):
@@ -33,7 +35,7 @@ class Query(TypedDict):
 
 
 class QueryGenerationState(TypedDict):
-    query_list: list[Query]
+    search_query: list[Query]
 
 
 class WebSearchState(TypedDict):
