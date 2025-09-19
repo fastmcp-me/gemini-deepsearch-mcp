@@ -1,3 +1,10 @@
+[![Add to Cursor](https://fastmcp.me/badges/cursor_dark.svg)](https://fastmcp.me/MCP/Details/1118/gemini-deepsearch)
+[![Add to VS Code](https://fastmcp.me/badges/vscode_dark.svg)](https://fastmcp.me/MCP/Details/1118/gemini-deepsearch)
+[![Add to Claude](https://fastmcp.me/badges/claude_dark.svg)](https://fastmcp.me/MCP/Details/1118/gemini-deepsearch)
+[![Add to ChatGPT](https://fastmcp.me/badges/chatgpt_dark.svg)](https://fastmcp.me/MCP/Details/1118/gemini-deepsearch)
+[![Add to Codex](https://fastmcp.me/badges/codex_dark.svg)](https://fastmcp.me/MCP/Details/1118/gemini-deepsearch)
+[![Add to Gemini](https://fastmcp.me/badges/gemini_dark.svg)](https://fastmcp.me/MCP/Details/1118/gemini-deepsearch)
+
 # Gemini DeepSearch MCP
 
 Gemini DeepSearch MCP is an automated research agent that leverages Google Gemini models and Google Search to perform deep, multi-step web research. It generates sophisticated queries, synthesizes information from search results, identifies knowledge gaps, and produces high-quality, citation-rich answers.
